@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hyrvärt - Hyr och hyr ut verktyg i ditt närområde</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            scroll-behavior: smooth;
+        }
+        
+        .hero-pattern {
+            background-color: #f9fafb;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23e5e7eb' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        
+        .feature-card {
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .tool-card {
+            transition: all 0.3s ease;
+        }
+        
+        .tool-card:hover {
+            transform: scale(1.03);
+        }
+        
+        .tool-image {
+            height: 200px;
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .phone-mockup {
+            position: relative;
+            z-index: 10;
+        }
+        
+        .phone-mockup-shadow {
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70%;
+            height: 20px;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.1);
+            filter: blur(10px);
+            z-index: 1;
+        }
+        
+        .phone-screen {
+            overflow: hidden;
+            border-radius: 30px;
+        }
+        
+        .phone-frame {
+            position: relative;
+            border-radius: 36px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        .phone-notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 30px;
+            background-color: #000;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+            z-index: 20;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+            100% {
+                transform: translateY(0px);
+            }
+        }
+        
+        .float-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .float-animation-delay {
+            animation: float 6s ease-in-out 2s infinite;
+        }
+
+        .search-bar-shadow {
+            box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.2);
+        }
+
+        .testimonial-card {
+            transition: all 0.3s ease;
+        }
+        
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .category-button {
+            transition: all 0.2s ease;
+        }
+        
+        .category-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .category-button.active {
+            background-color: #10b981;
+            color: white;
+        }
+
+        #map {
+            height: 400px;
+            width: 100%;
+            border-radius: 0.5rem;
+        }
+
+        .modal {
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        
+        .tool-svg {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md fixed w-full z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <!-- Logo för Hyrvärt -->
+                        <svg class="h-10 w-10" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="50" cy="50" r="48" fill="#10b981" stroke="#047857" stroke-width="2"/>
+                            <path d="M30 35L50 25L70 35V65L50 75L30 65V35Z" fill="#d1fae5" stroke="#047857" stroke-width="2"/>
+                            <path d="M40 45L50 40L60 45V55L50 60L40 55V45Z" fill="#047857"/>
+                        </svg>
+                        <span class="ml-2 text-xl font-bold text-gray-800">Hyrvärt</span>
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="#hur-det-fungerar" class="text-gray-600 hover:text-emerald-600 transition-colors">Hur det fungerar</a>
+                    <a href="#verktyg" class="text-gray-600 hover:text-emerald-600 transition-colors">Verktyg</a>
+                    <a href="#app" class="text-gray-600 hover:text-emerald-600 transition-colors">App</a>
+                    <a href="#kontakt" class="text-gray-600 hover:text-emerald-600 transition-colors">Kontakt</a>
+                    <button id="loginBtn" class="px-4 py-2 border border-emerald-600 text-emerald-600 rounded-md hover:bg-emerald-600 hover:text-white transition-colors">Logga in</button>
+                    <button id="registerBtn" class="px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors">Registrera</button>
+                </div>
+                <div class="md:hidden flex items-center">
+                    <button id="mobileMenuBtn" class="text-gray-600 hover:text-emerald-600">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile menu -->
+        <div id="mobileMenu" class="hidden md:hidden bg-white shadow-md">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="#hur-det-fungerar" class="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:text-emerald-600 hover:bg-gray-50">Hur det fungerar</a>
+                <a href="#verktyg" class="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:text-emerald-600 hover:bg-gray-50">Verktyg</a>
+                <a href="#app" class="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:text-emerald-600 hover:bg-gray-50">App</a>
+                <a href="#kontakt" class="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:text-emerald-600 hover:bg-gray-50">Kontakt</a>
+                <button class="w-full mt-2 px-3 py-2 border border-emerald-600 text-emerald-600 rounded-md hover:bg-emerald-600 hover:text-white transition-colors">Logga in</button>
+                <button class="w-full mt-2 px-3 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors">Registrera</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-pattern pt-28 pb-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-10 md:mb-0">
+                    <h1 class="text-4xl md:text-5xl font-bold text-gray-800 leading-tight mb-4">
+                        Hyr och hyr ut <span class="text-emerald-600">verktyg</span> i ditt närområde
+                    </h1>
+                    <p class="text-lg text-gray-600 mb-8">
+                        Spara pengar och resurser genom att hyra verktyg från dina grannar eller tjäna extra pengar genom att hyra ut dina egna verktyg som bara samlar damm.
+                    </p>
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                        <button id="searchToolsBtn" class="px-6 py-3 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors flex items-center justify-center">
+                            <i class="fas fa-search mr-2"></i>
+                            Hitta verktyg
+                        </button>
+                        <button id="listToolsBtn" class="px-6 py-3 border border-emerald-600 text-emerald-600 rounded-md hover:bg-emerald-600 hover:text-white transition-colors flex items-center justify-center">
+                            <i class="fas fa-upload mr-2"></i>
+                            Lägg upp verktyg
+                        </button>
+                    </div>
+                </div>
+                <div class="md:w-1/2 flex justify-center">
+                    <div class="relative">
+                        <div class="phone-frame bg-black w-64 h-[500px] float-animation">
+                            <div class="phone-notch"></div>
+                            <div class="phone-screen h-full w-full p-2">
+                                <div class="bg-gray-100 h-full w-full rounded-3xl overflow-hidden">
+                                    <!-- App mockup content -->
+                                    <div class="bg-emerald-600 text-white p-4">
+                                        <div class="flex justify-between items-center">
+                                            <div class="text-lg font-semibold">Hyrvärt</div>
+                                            <div class="flex space-x-2">
+                                                <i class="fas fa-bell"></i>
+                                                <i class="fas fa-user-circle"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="p-4">
+                                        <div class="bg-white rounded-lg p-3 shadow-md mb-4">
+                                            <div class="flex items-center">
+                                                <i class="fas fa-search text-gray-400 mr-2"></i>
+                                                <span class="text-gray-400">Sök verktyg...</span>
+                                            </div>
+                                        </div>
+                                        <div class="text-sm font-medium text-gray-700 mb-2">Populära kategorier</div>
+                                        <div class="flex space-x-2 mb-4 overflow-x-auto pb-2">
+                                            <div class="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-xs whitespace-nowrap">Borrmaskiner</div>
+                                            <div class="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-xs whitespace-nowrap">Trädgård</div>
+                                            <div class="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-xs whitespace-nowrap">Stegar</div>
+                                            <div class="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-xs whitespace-nowrap">Sågar</div>
+                                        </div>
+                                        <div class="text-sm font-medium text-gray-700 mb-2">Nära dig</div>
+                                        <div class="space-y-3">
+                                            <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                                                <div class="h-24 bg-gray-200 flex items-center justify-center">
+                                                    <svg class="h-20 w-20" viewBox="0 0 24 24">
+                                                        <path fill="#374151" d="M7,2V4H8V18H5V20H19V18H16V4H17V2H7M10,4H14V18H10V4Z" />
+                                                    </svg>
+                                                </div>
+                                                <div class="p-2">
+                                                    <div class="font-medium text-xs">Bosch Borrhammare</div>
+                                                    <div class="text-xs text-gray-500">1.2 km bort</div>
+                                                    <div class="text-xs font-semibold text-emerald-600">75 kr/dag</div>
+                                                </div>
+                                            </div>
+                                            <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                                                <div class="h-24 bg-gray-200 flex items-center justify-center">
+                                                    <svg class="h-20 w-20" viewBox="0 0 24 24">
+                                                        <path fill="#374151" d="M20,18V14H22V18H20M20,13H22V9H20V13M13,7.5L9,3.5L5,7.5V7H2V20H16V7H13V7.5M11,14H7V12H11V14Z" />
+                                                    </svg>
+                                                </div>
+                                                <div class="p-2">
+                                                    <div class="font-medium text-xs">Högtryckstvätt</div>
+                                                    <div class="text-xs text-gray-500">0.8 km bort</div>
+                                                    <div class="text-xs font-semibold text-emerald-600">120 kr/dag</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="phone-mockup-shadow"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Search Bar Section -->
+    <section class="py-10 bg-white">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-white rounded-xl shadow-lg p-6 search-bar-shadow">
+                <div class="text-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Hitta verktyg i ditt område</h2>
+                    <p class="text-gray-600">Sök bland tusentals verktyg nära dig</p>
+                </div>
+                <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+                    <div class="flex-grow">
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-search text-gray-400"></i>
+                            </div>
+                            <input type="text" placeholder="Vad behöver du?" class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                        </div>
+                    </div>
+                    <div class="flex-grow">
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-map-marker-alt text-gray-400"></i>
+                            </div>
+                            <input type="text" placeholder="Plats" class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                        </div>
+                    </div>
+                    <div class="flex-grow md:flex-grow-0">
+                        <button class="w-full px-6 py-3 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors">
+                            Sök
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="hur-det-fungerar" class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Hur det fungerar</h2>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                    Hyrvärt gör det enkelt att hyra och hyra ut verktyg i ditt närområde. Följ dessa enkla steg för att komma igång.
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="feature-card bg-white p-6 rounded-lg shadow-md text-center">
+                    <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-search text-2xl text-emerald-600"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">1. Hitta verktyg</h3>
+                    <p class="text-gray-600">
+                        Sök bland tusentals verktyg i ditt närområde. Filtrera efter kategori, pris och tillgänglighet.
+                    </p>
+                </div>
+                <div class="feature-card bg-white p-6 rounded-lg shadow-md text-center">
+                    <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-calendar-check text-2xl text-emerald-600"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">2. Boka och betala</h3>
+                    <p class="text-gray-600">
+                        Välj datum, boka och betala säkert genom vår plattform. Kommunicera direkt med ägaren.
+                    </p>
+                </div>
+                <div class="feature-card bg-white p-6 rounded-lg shadow-md text-center">
+                    <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-tools text-2xl text-emerald-600"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">3. Hämta och använd</h3>
+                    <p class="text-gray-600">
+                        Hämta verktyget på överenskommen plats, använd det och lämna tillbaka det i samma skick.
+                    </p>
+                </div>
+            </div>
+            <div class="mt-16 text-center">
+                <h3 class="text-2xl font-bold text-gray-800 mb-4">Vill du hyra ut dina verktyg?</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
+                    <div class="feature-card bg-white p-6 rounded-lg shadow-md text-center">
+                        <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-camera text-2xl text-emerald-600"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">1. Lägg upp dina verktyg</h3>
+                        <p class="text-gray-600">
+                            Ta bilder, beskriv dina verktyg och sätt ett pris. Det tar bara några minuter.
+                        </p>
+                    </div>
+                    <div class="feature-card bg-white p-6 rounded-lg shadow-md text-center">
+                        <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-comment-dots text-2xl text-emerald-600"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">2. Godkänn förfrågningar</h3>
+                        <p class="text-gray-600">
+                            Granska bokningsförfrågningar och kommunicera med potentiella hyresgäster.
+                        </p>
+                    </div>
+                    <div class="feature-card bg-white p-6 rounded-lg shadow-md text-center">
+                        <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-money-bill-wave text-2xl text-emerald-600"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">3. Tjäna pengar</h3>
+                        <p class="text-gray-600">
+                            Lämna över verktyget, få det tillbaka och få betalt direkt till ditt konto.
+                        </p>
+                    </div>
+                </div>
+                <button id="startRentingBtn" class="mt-10 px-8 py-3 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors">
+                    Börja hyra ut
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Tools Section -->
+    <section id="verktyg" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Populära verktyg</h2>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                    Utforska de mest eftertraktade verktygen i ditt område och hitta precis vad du behöver för ditt nästa projekt.
+                </p>
+            </div>
+
+            <!-- Category Filter -->
+            <div class="flex flex-wrap justify-center gap-3 mb-10">
+                <button class="category-button active px-4 py-2 rounded-full text-sm font-medium">
+                    Alla
+                </button>
+                <button class="category-button px-4 py-2 bg-gray-100 rounded-full text-sm font-medium text-gray-700 hover:bg-gray-200">
+                    Borrmaskiner
+                </button>
+                <button class="category-button px-4 py-2 bg-gray-100 rounded-full text-sm font-medium text-gray-700 hover:bg-gray-200">
+                    Trädgård
+                </button>
+                <button class="category-button px-4 py-2 bg-gray-100 rounded-full text-sm font-medium text-gray-700 hover:bg-gray-200">
+                    Stegar
+                </button>
+                <button class="category-button px-4 py-2 bg-gray-100 rounded-full text-sm font-medium text-gray-700 hover:bg-gray-200">
+                    Sågar
+                </button>
+                <button class="category-button px-4 py-2 bg-gray-100 rounded-full text-sm font-medium text-gray-700 hover:bg-gray-200">
+                    Slipmaskiner
+                </button>
+                <button class="category-button px-4 py-2 bg-gray-100 rounded-full text-sm font-medium text-gray-700 hover:bg-gray-200">
+                    Målning
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Tool Card 1 - Borrhammare -->
+                <div class="tool-card bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="tool-image bg-gray-100">
+                        <svg class="tool-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Drill body -->
+                            <rect x="20" y="30" width="60" height="25" rx="5" fill="#e74c3c" />
+                            <rect x="20" y="55" width="60" height="15" rx="3" fill="#c0392b" />
+                            
+                            <!-- Drill handle -->
+                            <rect x="25" y="70" width="50" height="10" rx="3" fill="#34495e" />
+                            
+                            <!-- Drill chuck -->
+                            <rect x="10" y="35" width="10" height="15" fill="#7f8c8d" />
+                            <circle cx="10" cy="42.5" r="5" fill="#95a5a6" />
+                            
+                            <!-- Drill bit -->
+                            <rect x="5" y="40" width="5" height="5" fill="#7f8c8d" />
+                            <polygon points="5,42.5 0,40 0,45" fill="#7f8c8d" />
+                            
+                            <!-- Button -->
+                            <rect x="50" y="35" width="20" height="10" rx="5" fill="#2ecc71" />
+                            
+                            <!-- Battery -->
+                            <rect x="30" y="70" width="40" height="15" rx="2" fill="#3498db" />
+                            <rect x="35" y="70" width="30" height="5" fill="#2980b9" />
+                            
+                            <!-- Brand logo -->
+                            <text x="40" y="45" font-family="Arial" font-size="6" font-weight="bold" fill="white">BOSCH</text>
+                        </svg>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-800">Bosch Borrhammare</h3>
+                                <p class="text-sm text-gray-600 mb-2">Kraftfull borrhammare, perfekt för betong</p>
+                            </div>
+                            <span class="bg-emerald-100 text-emerald-800 text-xs px-2 py-1 rounded-full">Borrmaskiner</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-500 mb-3">
+                            <i class="fas fa-map-marker-alt mr-1"></i>
+                            <span>1.2 km bort</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div class="text-emerald-600 font-bold">75 kr/dag</div>
+                            <button class="px-3 py-1 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors text-sm">
+                                Boka nu
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tool Card 2 - Högtryckstvätt -->
+                <div class="tool-card bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="tool-image bg-gray-100">
+                        <svg class="tool-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Pressure washer body -->
+                            <rect x="25" y="40" width="50" height="40" rx="3" fill="#f1c40f" />
+                            <rect x="30" y="45" width="40" height="30" rx="2" fill="#2c3e50" />
+                            
+                            <!-- Control panel -->
+                            <rect x="35" y="50" width="30" height="10" rx="1" fill="#34495e" />
+                            <circle cx="45" cy="55" r="3" fill="#e74c3c" />
+                            <circle cx="55" cy="55" r="3" fill="#2ecc71" />
+                            
+                            <!-- Wheels -->
+                            <circle cx="35" cy="80" r="7" fill="#7f8c8d" />
+                            <circle cx="35" cy="80" r="3" fill="#95a5a6" />
+                            <circle cx="65" cy="80" r="7" fill="#7f8c8d" />
+                            <circle cx="65" cy="80" r="3" fill="#95a5a6" />
+                            
+                            <!-- Hose -->
+                            <path d="M75,60 Q85,65 85,75 Q85,85 75,90" stroke="#3498db" stroke-width="3" fill="none" />
+                            
+                            <!-- Spray gun -->
+                            <rect x="75" y="90" width="15" height="5" rx="1" fill="#34495e" />
+                            <rect x="90" y="88" width="5" height="9" rx="1" fill="#7f8c8d" />
+                            
+                            <!-- Brand logo -->
+                            <text x="37" y="75" font-family="Arial" font-size="5" font-weight="bold" fill="white">KÄRCHER</text>
+                        </svg>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-800">Högtryckstvätt</h3>
+                                <p class="text-sm text-gray-600 mb-2">Kärcher K5, perfekt för utomhusrengöring</p>
+                            </div>
+                            <span class="bg-emerald-100 text-emerald-800 text-xs px-2 py-1 rounded-full">Trädgård</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-500 mb-3">
+                            <i class="fas fa-map-marker-alt mr-1"></i>
+                            <span>0.8 km bort</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div class="text-emerald-600 font-bold">120 kr/dag</div>
+                            <button class="px-3 py-1 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors text-sm">
+                                Boka nu
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tool Card 3 - Cirkelsåg -->
+                <div class="tool-card bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="tool-image bg-gray-100">
+                        <svg class="tool-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Circular saw body -->
+                            <rect x="30" y="30" width="50" height="25" rx="3" fill="#27ae60" />
+                            <rect x="35" y="55" width="40" height="15" rx="2" fill="#2ecc71" />
+                            
+                            <!-- Handle -->
+                            <rect x="60" y="30" width="15" height="40" rx="3" fill="#34495e" />
+                            
+                            <!-- Blade guard -->
+                            <path d="M30,45 A20,20 0 0,1 50,25 L50,45 Z" fill="#95a5a6" />
+                            
+                            <!-- Saw blade -->
+                            <circle cx="40" cy="45" r="15" fill="#7f8c8d" />
+                            <circle cx="40" cy="45" r="12" fill="#bdc3c7" />
+                            <circle cx="40" cy="45" r="2" fill="#7f8c8d" />
+                            
+                            <!-- Blade teeth -->
+                            <path d="M40,30 L42,33 L38,33 Z" fill="#7f8c8d" />
+                            <path d="M25,45 L28,47 L28,43 Z" fill="#7f8c8d" />
+                            <path d="M40,60 L38,57 L42,57 Z" fill="#7f8c8d" />
+                            <path d="M55,45 L52,43 L52,47 Z" fill="#7f8c8d" />
+                            
+                            <!-- Button -->
+                            <rect x="65" y="40" width="5" height="10" rx="2" fill="#e74c3c" />
+                            
+                            <!-- Base plate -->
+                            <rect x="20" y="45" width="40" height="5" fill="#34495e" />
+                            
+                            <!-- Brand logo -->
+                            <text x="40" y="40" font-family="Arial" font-size="5" font-weight="bold" fill="white">MAKITA</text>
+                        </svg>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-800">Cirkelsåg</h3>
+                                <p class="text-sm text-gray-600 mb-2">Makita 18V, perfekt för träarbeten</p>
+                            </div>
+                            <span class="bg-emerald-100 text-emerald-800 text-xs px-2 py-1 rounded-full">Sågar</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-500 mb-3">
+                            <i class="fas fa-map-marker-alt mr-1"></i>
+                            <span>2.5 km bort</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div class="text-emerald-600 font-bold">90 kr/dag</div>
+                            <button class="px-3 py-1 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors text-sm">
+                                Boka nu
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tool Card 4 - Stege -->
+                <div class="tool-card bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="tool-image bg-gray-100">
+                        <svg class="tool-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Ladder sides -->
+                            <rect x="30" y="20" width="5" height="60" fill="#95a5a6" />
+                            <rect x="65" y="20" width="5" height="60" fill="#95a5a6" />
+                            
+                            <!-- Ladder steps -->
+                            <rect x="30" y="25" width="40" height="3" fill="#7f8c8d" />
+                            <rect x="30" y="35" width="40" height="3" fill="#7f8c8d" />
+                            <rect x="30" y="45" width="40" height="3" fill="#7f8c8d" />
+                            <rect x="30" y="55" width="40" height="3" fill="#7f8c8d" />
+                            <rect x="30" y="65" width="40" height="3" fill="#7f8c8d" />
+                            <rect x="30" y="75" width="40" height="3" fill="#7f8c8d" />
+                            
+                            <!-- Ladder feet -->
+                            <rect x="28" y="78" width="9" height="2" fill="#34495e" />
+                            <rect x="63" y="78" width="9" height="2" fill="#34495e" />
+                            
+                            <!-- Ladder lock mechanism -->
+                            <rect x="45" y="40" width="10" height="5" rx="2" fill="#e74c3c" />
+                            <line x1="50" y1="40" x2="50" y2="20" stroke="#7f8c8d" stroke-width="1" />
+                            
+                            <!-- Telescopic sections (hint) -->
+                            <line x1="35" y1="20" x2="35" y2="80" stroke="#bdc3c7" stroke-dasharray="2,2" stroke-width="1" />
+                            <line x1="65" y1="20" x2="65" y2="80" stroke="#bdc3c7" stroke-dasharray="2,2" stroke-width="1" />
+                            
+                            <!-- Brand logo -->
+                            <text x="38" y="72" font-family="Arial" font-size="4" font-weight="bold" fill="#34495e">TELESTEPS</text>
+                        </svg>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-800">Stege</h3>
+                                <p class="text-sm text-gray-600 mb-2">Teleskopstege, 3.8m, aluminium</p>
+                            </div>
+                            <span class="bg-emerald-100 text-emerald-800 text-xs px-2 py-1 rounded-full">Stegar</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-500 mb-3">
+                            <i class="fas fa-map-marker-alt mr-1"></i>
+                            <span>1.7 km bort</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div class="text-emerald-600 font-bold">60 kr/dag</div>
+                            <button class="px-3 py-1 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors text-sm">
+                                Boka nu
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-10">
+                <button id="viewAllToolsBtn" class="px-6 py-3 border border-emerald-600 text-emerald-600 rounded-md hover:bg-emerald-600 hover:text-white transition-colors">
+                    Visa alla verktyg
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Map Section -->
+    <section class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Verktyg nära dig</h2>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                    Utforska kartan för att hitta verktyg i ditt närområde. Klicka på markeringarna för att se mer information.
+                </p>
+            </div>
+            <div id="map" class="shadow-lg">
+                <!-- Map SVG representation -->
+                <svg width="100%" height="100%" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Map background -->
+                    <rect width="100%" height="100%" fill="#e6f7ff" />
+                    
+                    <!-- Roads -->
+                    <path d="M0,200 H800" stroke="#ffffff" stroke-width="15" />
+                    <path d="M0,100 H800" stroke="#ffffff" stroke-width="10" />
+                    <path d="M0,300 H800" stroke="#ffffff" stroke-width="10" />
+                    <path d="M200,0 V400" stroke="#ffffff" stroke-width="10" />
+                    <path d="M400,0 V400" stroke="#ffffff" stroke-width="15" />
+                    <path d="M600,0 V400" stroke="#ffffff" stroke-width="10" />
+                    
+                    <!-- Parks -->
+                    <rect x="50" y="50" width="100" height="100" fill="#a5d6a7" rx="10" />
+                    <rect x="500" y="250" width="150" height="100" fill="#a5d6a7" rx="10" />
+                    
+                    <!-- Buildings -->
+                    <rect x="250" y="50" width="80" height="40" fill="#e0e0e0" />
+                    <rect x="350" y="50" width="40" height="40" fill="#e0e0e0" />
+                    <rect x="250" y="120" width="60" height="60" fill="#e0e0e0" />
+                    <rect x="450" y="50" width="100" height="40" fill="#e0e0e0" />
+                    <rect x="650" y="50" width="80" height="80" fill="#e0e0e0" />
+                    <rect x="50" y="250" width="100" height="40" fill="#e0e0e0" />
+                    <rect x="250" y="250" width="60" height="100" fill="#e0e0e0" />
+                    <rect x="350" y="300" width="40" height="50" fill="#e0e0e0" />
+                    <rect x="450" y="320" width="30" height="30" fill="#e0e0e0" />
+                    <rect x="700" y="300" width="50" height="50" fill="#e0e0e0" />
+                    
+                    <!-- Tool markers -->
+                    <!-- Borrhammare -->
+                    <circle cx="280" cy="150" r="15" fill="#10b981" />
+                    <text x="280" y="155" text-anchor="middle" font-size="12" fill="white">🔨</text>
+                    
+                    <!-- Högtryckstvätt -->
+                    <circle cx="100" cy="270" r="15" fill="#10b981" />
+                    <text x="100" y="275" text-anchor="middle" font-size="12" fill="white">💦</text>
+                    
+                    <!-- Cirkelsåg -->
+                    <circle cx="480" cy="70" r="15" fill="#10b981" />
+                    <text x="480" y="75" text-anchor="middle" font-size="12" fill="white">⚙️</text>
+                    
+                    <!-- Stege -->
+                    <circle cx="680" cy="325" r="15" fill="#10b981" />
+                    <text x="680" y="330" text-anchor="middle" font-size="12" fill="white">🪜</text>
+                    
+                    <!-- Current location -->
+                    <circle cx="400" cy="200" r="10" fill="#3b82f6" stroke="#ffffff" stroke-width="3" />
+                    <circle cx="400" cy="200" r="20" fill="#3b82f6" opacity="0.3" />
+                    
+                    <!-- Legend -->
+                    <rect x="20" y="350" width="180" height="30" fill="white" rx="5" opacity="0.9" />
+                    <circle cx="40" cy="365" r="8" fill="#10b981" />
+                    <text x="55" y="370" font-size="12" fill="#333">Tillgängliga verktyg</text>
+                    <circle cx="140" cy="365" r="8" fill="#3b82f6" />
+                    <text x="155" y="370" font-size="12" fill="#333">Du är här</text>
+                </svg>
+            </div>
+        </div>
+    </section>
+
+    <!-- App Section -->
+    <section id="app" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-10 md:mb-0 order-2 md:order-1">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">
+                        Ladda ner vår app för en smidigare upplevelse
+                    </h2>
+                    <p class="text-lg text-gray-600 mb-6">
+                        Med vår app kan du enkelt hitta, boka och hantera verktyg var du än befinner dig. Få notiser om nya verktyg, bokningar och meddelanden.
+                    </p>
+                    <div class="space-y-4 mb-8">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 mt-1">
+                                <div class="w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-bell text-xs text-emerald-600"></i>
+                                </div>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="text-lg font-medium text-gray-800">Realtidsnotiser</h3>
+                                <p class="text-gray-600">Få direkta notiser om bokningar, meddelanden och påminnelser.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 mt-1">
+                                <div class="w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-map-marker-alt text-xs text-emerald-600"></i>
+                                </div>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="text-lg font-medium text-gray-800">Platsbaserad sökning</h3>
+                                <p class="text-gray-600">Hitta verktyg nära dig med vår GPS-baserade sökfunktion.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 mt-1">
+                                <div class="w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-comment-dots text-xs text-emerald-600"></i>
+                                </div>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="text-lg font-medium text-gray-800">Inbyggd chatt</h3>
+                                <p class="text-gray-600">Kommunicera enkelt med ägare och hyresgäster direkt i appen.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex space-x-4">
+                        <a href="#" class="flex items-center bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors">
+                            <i class="fab fa-apple text-2xl mr-2"></i>
+                            <div>
+                                <div class="text-xs">Ladda ner på</div>
+                                <div class="text-sm font-semibold">App Store</div>
+                            </div>
+                        </a>
+                        <a href="#" class="flex items-center bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors">
+                            <i class="fab fa-google-play text-2xl mr-2"></i>
+                            <div>
+                                <div class="text-xs">Ladda ner på</div>
+                                <div class="text-sm font-semibold">Google Play</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="md:w-1/2 flex justify-center order-1 md:order-2">
+                    <div class="relative">
+                        <div class="phone-frame bg-black w-64 h-[500px] float-animation-delay">
+                            <div class="phone-notch"></div>
+                            <div class="phone-screen h-full w-full p-2">
+                                <div class="bg-gray-100 h-full w-full rounded-3xl overflow-hidden">
+                                    <!-- App mockup content -->
+                                    <div class="bg-emerald-600 text-white p-4">
+                                        <div class="flex justify-between items-center">
+                                            <div class="text-lg font-semibold">Meddelanden</div>
+                                            <div>
+                                                <i class="fas fa-edit"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="p-4">
+                                        <div class="bg-white rounded-lg p-3 shadow-md mb-4">
+                                            <div class="flex items-center mb-2">
+                                                <div class="w-10 h-10 bg-gray-300 rounded-full mr-3 flex items-center justify-center">
+                                                    <span class="text-gray-600">AS</span>
+                                                </div>
+                                                <div>
+                                                    <div class="font-medium text-sm">Anna Svensson</div>
+                                                    <div class="text-xs text-gray-500">Bosch Borrhammare</div>
+                                                </div>
+                                            </div>
+                                            <div class="bg-gray-100 rounded-lg p-2 text-xs">
+                                                Hej! Jag skulle vilja hyra din borrhammare på lördag. Är den tillgänglig?
+                                            </div>
+                                            <div class="text-right mt-2">
+                                                <div class="bg-emerald-100 rounded-lg p-2 text-xs inline-block">
+                                                    Ja, den är tillgänglig! När vill du hämta den?
+                                                </div>
+                                            </div>
+                                            <div class="mt-2 flex">
+                                                <input type="text" placeholder="Skriv ett meddelande..." class="flex-grow text-xs p-2 border rounded-l-lg focus:outline-none">
+                                                <button class="bg-emerald-600 text-white px-3 rounded-r-lg">
+                                                    <i class="fas fa-paper-plane"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="bg-white rounded-lg p-3 shadow-md">
+                                            <div class="flex items-center mb-2">
+                                                <div class="w-10 h-10 bg-gray-300 rounded-full mr-3 flex items-center justify-center">
+                                                    <span class="text-gray-600">JN</span>
+                                                </div>
+                                                <div>
+                                                    <div class="font-medium text-sm">Johan Nilsson</div>
+                                                    <div class="text-xs text-gray-500">Högtryckstvätt</div>
+                                                </div>
+                                            </div>
+                                            <div class="bg-gray-100 rounded-lg p-2 text-xs">
+                                                Tack för att jag fick hyra din högtryckstvätt! Den fungerade perfekt.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="phone-mockup-shadow"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Vad våra användare säger</h2>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                    Hör vad våra nöjda användare har att säga om sina upplevelser med Hyrvärt.
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="testimonial-card bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center mb-4">
+                        <div class="text-yellow-400 flex">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <span class="ml-2 text-gray-600 text-sm">5.0</span>
+                    </div>
+                    <p class="text-gray-600 mb-6">
+                        "Jag sparade över 2000 kr genom att hyra en borrhammare istället för att köpa en. Processen var enkel och ägaren var mycket hjälpsam med tips om hur jag skulle använda verktyget."
+                    </p>
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-gray-300 rounded-full mr-4 flex items-center justify-center">
+                            <span class="text-gray-600 font-semibold">EJ</span>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800">Erik Johansson</h4>
+                            <p class="text-sm text-gray-500">Stockholm</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center mb-4">
+                        <div class="text-yellow-400 flex">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <span class="ml-2 text-gray-600 text-sm">5.0</span>
+                    </div>
+                    <p class="text-gray-600 mb-6">
+                        "Som ägare av flera verktyg som jag sällan använder har Hyrvärt varit fantastiskt. Jag tjänar extra pengar varje månad och mina verktyg kommer till användning istället för att samla damm."
+                    </p>
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-gray-300 rounded-full mr-4 flex items-center justify-center">
+                            <span class="text-gray-600 font-semibold">MA</span>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800">Maria Andersson</h4>
+                            <p class="text-sm text-gray-500">Göteborg</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center mb-4">
+                        <div class="text-yellow-400 flex">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <span class="ml-2 text-gray-600 text-sm">4.5</span>
+                    </div>
+                    <p class="text-gray-600 mb-6">
+                        "Appen är otroligt smidig att använda. Jag hittade en högtryckstvätt bara några kvarter bort och kunde rengöra min uteplats samma dag. Rekommenderar starkt!"
+                    </p>
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-gray-300 rounded-full mr-4 flex items-center justify-center">
+                            <span class="text-gray-600 font-semibold">AL</span>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800">Anders Lindgren</h4>
+                            <p class="text-sm text-gray-500">Malmö</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-16 bg-emerald-600">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <div class="md:w-2/3 mb-8 md:mb-0">
+                    <h2 class="text-3xl font-bold text-white mb-4">
+                        Redo att börja hyra eller hyra ut verktyg?
+                    </h2>
+                    <p class="text-emerald-100 text-lg">
+                        Gå med i vår växande gemenskap av verktygsdelande grannar och börja spara pengar och resurser idag.
+                    </p>
+                </div>
+                <div class="md:w-1/3 flex flex-col sm:flex-row md:flex-col space-y-4 sm:space-y-0 sm:space-x-4 md:space-x-0 md:space-y-4">
+                    <button id="ctaRegisterBtn" class="px-6 py-3 bg-white text-emerald-600 rounded-md hover:bg-gray-100 transition-colors font-semibold">
+                        Registrera dig gratis
+                    </button>
+                    <button id="ctaLearnMoreBtn" class="px-6 py-3 border border-white text-white rounded-md hover:bg-emerald-700 transition-colors">
+                        Läs mer
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="kontakt" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Kontakta oss</h2>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                    Har du frågor eller feedback? Vi skulle älska att höra från dig. Fyll i formuläret nedan så återkommer vi så snart som möjligt.
+                </p>
+            </div>
+            <div class="max-w-3xl mx-auto">
+                <form class="space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Namn</label>
+                            <input type="text" id="name" name="name" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">E-post</label>
+                            <input type="email" id="email" name="email" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="subject" class="block text-sm font-medium text-gray-700 mb-1">Ämne</label>
+                        <input type="text" id="subject" name="subject" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                    </div>
+                    <div>
+                        <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Meddelande</label>
+                        <textarea id="message" name="message" rows="5" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"></textarea>
+                    </div>
+                    <div class="flex items-center">
+                        <input type="checkbox" id="privacy" name="privacy" class="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded">
+                        <label for="privacy" class="ml-2 block text-sm text-gray-700">
+                            Jag godkänner <a href="#" class="text-emerald-600 hover:underline">integritetspolicyn</a>
+                        </label>
+                    </div>
+                    <div>
+                        <button type="submit" id="contactSubmitBtn" class="w-full px-6 py-3 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors">
+                            Skicka meddelande
+                        </button>
+                    </div>
+                </form>
+                <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                    <div>
+                        <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-envelope text-emerald-600"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">E-post</h3>
+                        <p class="text-gray-600">info@hyrvart.se</p>
+                    </div>
+                    <div>
+                        <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-phone text-emerald-600"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">Telefon</h3>
+                        <p class="text-gray-600">08-123 45 67</p>
+                    </div>
+                    <div>
+                        <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-map-marker-alt text-emerald-600"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">Adress</h3>
+                        <p class="text-gray-600">Verktygsvägen 1, 123 45 Stockholm</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <svg class="h-8 w-8" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="50" cy="50" r="48" fill="#10b981" stroke="#d1fae5" stroke-width="2"/>
+                            <path d="M30 35L50 25L70 35V65L50 75L30 65V35Z" fill="#d1fae5" stroke="#d1fae5" stroke-width="2"/>
+                            <path d="M40 45L50 40L60 45V55L50 60L40 55V45Z" fill="#047857"/>
+                        </svg>
+                        <span class="ml-2 text-xl font-bold">Hyrvärt</span>
+                    </div>
+                    <p class="text-gray-400 mb-4">
+                        Hyr och hyr ut verktyg i ditt närområde. Spara pengar och resurser genom att dela.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Länkar</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Hem</a></li>
+                        <li><a href="#hur-det-fungerar" class="text-gray-400 hover:text-white transition-colors">Hur det fungerar</a></li>
+                        <li><a href="#verktyg" class="text-gray-400 hover:text-white transition-colors">Verktyg</a></li>
+                        <li><a href="#app" class="text-gray-400 hover:text-white transition-colors">App</a></li>
+                        <li><a href="#kontakt" class="text-gray-400 hover:text-white transition-colors">Kontakt</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Juridiskt</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Användarvillkor</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Integritetspolicy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Cookie-policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Hyresavtal</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Försäkringsvillkor</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Nyhetsbrev</h3>
+                    <p class="text-gray-400 mb-4">
+                        Prenumerera på vårt nyhetsbrev för att få de senaste uppdateringarna och erbjudandena.
+                    </p>
+                    <form class="flex">
+                        <input type="email" placeholder="Din e-postadress" class="px-4 py-2 rounded-l-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 flex-grow text-gray-800">
+                        <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-r-md hover:bg-emerald-700 transition-colors">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 mb-4 md:mb-0">
+                    &copy; 2023 Hyrvärt AB. Alla rättigheter förbehållna.
+                </p>
+                <div class="flex space-x-4">
+                    <!-- Payment method SVGs -->
+                    <svg width="40" height="25" viewBox="0 0 40 25" xmlns="http://www.w3.org/2000/svg" class="bg-white rounded-sm p-1">
+                        <rect width="40" height="25" fill="white"/>
+                        <path d="M15 7H25V18H15V7Z" fill="#FF5F00"/>
+                        <path d="M16 12.5C16 10.1 17.1 8 18.9 6.7C17.6 5.7 16 5 14.2 5C10.3 5 7 8.4 7 12.5C7 16.6 10.3 20 14.2 20C16 20 17.6 19.3 18.9 18.3C17.1 17 16 14.9 16 12.5Z" fill="#EB001B"/>
+                        <path d="M33 12.5C33 16.6 29.7 20 25.8 20C24 20 22.4 19.3 21.1 18.3C22.9 17 24 14.9 24 12.5C24 10.1 22.9 8 21.1 6.7C22.4 5.7 24 5 25.8 5C29.7 5 33 8.4 33 12.5Z" fill="#F79E1B"/>
+                    </svg>
+                    <svg width="40" height="25" viewBox="0 0 40 25" xmlns="http://www.w3.org/2000/svg" class="bg-white rounded-sm p-1">
+                        <rect width="40" height="25" fill="white"/>
+                        <path d="M15.5 7H24.5C25.9 7 27 8.1 27 9.5V15.5C27 16.9 25.9 18 24.5 18H15.5C14.1 18 13 16.9 13 15.5V9.5C13 8.1 14.1 7 15.5 7Z" fill="#016FD0"/>
+                        <path d="M16.5 12.5L15 9.5L13.5 12.5H16.5Z" fill="```
